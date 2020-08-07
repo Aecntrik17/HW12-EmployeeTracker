@@ -31,3 +31,6 @@ VALUES
     ('Malia', 'Brown', 6, 5),
     ('Sarah', 'Lourd', 7, NULL),
     ('Tom', 'Allen', 8, 7);
+
+SELECT role.id, title, salary, name
+FROM role left join department on role.department_id = department.id 
