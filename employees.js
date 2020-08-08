@@ -1,6 +1,5 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-console.log(process.env.mysqlpassword);
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -70,7 +69,7 @@ function viewAllRoles() {
 // view all employees function
 function viewAllEmployees() {
   connection.query(
-    "SELECT employee.id, first_name, last_name, role_id, manager_id FROM employee inner join role on role_id = role.id",
+    "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id",
     function (err, res) {
       if (err) throw err;
       console.table(res);
