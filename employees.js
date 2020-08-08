@@ -27,13 +27,29 @@ function modifyEmployee() {
       name: "action",
       type: "rawlist",
       Message: "What would you like to do?",
-      choices: ["View All Roles"],
+      choices: [
+        "View All Roles",
+        "View All Employees",
+        "View Departments",
+        "Add a Role",
+        "Add a Department",
+        "Add an Employee",
+        "Update a Role",
+      ],
     })
 
     .then(function (answer) {
       switch (answer.action) {
         case "View All Roles":
           viewAllRoles();
+          break;
+
+        case "View All Employees":
+          viewAllEmployees();
+          break;
+
+        case "View Departments":
+          viewDepartments();
           break;
       }
     });
@@ -52,6 +68,16 @@ function viewAllRoles() {
 }
 
 // view all employees function
+function viewAllEmployees() {
+  connection.query(
+    "SELECT employee.id, first_name, last_name, role_id, manager_id FROM employee inner join role on role_id = role.id",
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      modifyEmployee();
+    }
+  );
+}
 
 // view departments function
 
