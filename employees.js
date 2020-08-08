@@ -40,7 +40,6 @@ function modifyEmployee() {
 }
 
 // view All Roles function
-
 function viewAllRoles() {
   connection.query(
     "SELECT role.id, title, salary, name FROM role left join department on role.department_id = department.id",
@@ -51,3 +50,15 @@ function viewAllRoles() {
     }
   );
 }
+
+// view all employees function
+
+// view departments function
+
+// Add a Role function
+
+// Add a Department function
+
+// Add an Employee function
+
+// update an Employee function
