@@ -86,7 +86,29 @@ async function modifyEmployee() {
           break;
 
         case "Add an Employee":
-          addEmployee();
+          const newEmpAnswer = await inquirer.prompt([
+            {
+              name: "first_name",
+              type: "input",
+              message: "What is the new employee irst name?",
+            },
+            {
+              name: "last_name",
+              type: "input",
+              message: "What is the new employee last Name?",
+            },
+            {
+              name: "role_id",
+              type: "input",
+              message: "What is the new employee's role id?",
+            },
+            {
+              name: "manager_id",
+              type: "input",
+              message: "What is the new employee's manager's id?",
+            },
+          ]);
+          addEmployee(newEmpAnswer);
           break;
 
         case "Update an Employee Role":
@@ -178,6 +200,19 @@ function addDepartment(newDeptAnswer) {
   );
 }
 // Add an Employee function
+function addEmployee(newEmpAnswer) {
+  console.log(newEmpAnswer);
+  connection.query(
+    "INSERT INTO employee SET ? ",
+    newEmpAnswer,
+
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      modifyEmployee();
+    }
+  );
+}
 
 // Update a Role function
 function updateEmpRole(updateEmpRoleAnswer) {
