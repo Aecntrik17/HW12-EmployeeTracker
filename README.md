@@ -15,6 +15,7 @@ The user, intended to the a manager will be able to
 ## Visuals
 
 Github Repo:https://github.com/Aecntrik17/HW12-EmployeeTracker
+Application Demo: https://drive.google.com/file/d/1BMAcmHvKWFeWMBn5HXIKFUpntEVcP8dl/view
 
 ## Aurthor
 
