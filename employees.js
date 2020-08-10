@@ -33,7 +33,7 @@ async function modifyEmployee() {
         "Add a Role",
         "Add a Department",
         "Add an Employee",
-        "Update a Role",
+        "Update an Employee Role",
         "Exit",
       ],
     })
@@ -89,14 +89,21 @@ async function modifyEmployee() {
           addEmployee();
           break;
 
-        case "Update a Role":
-          const updateRoleAnswer = inquirer.prompt({
-            name: "updateRole",
-            type: "input",
-            message: "What is the new Role title?",
-          });
-          const role = new Role(newRoleAnswer.name);
-          updateRole();
+        case "Update an Employee Role":
+          const updateEmpRoleAnswer = await inquirer.prompt([
+            {
+              name: "empId",
+              type: "input",
+              message: "What Employee Id would you like to update?",
+            },
+            {
+              name: "roleId",
+              type: "input",
+              message: "What is the new Role Id?",
+            },
+          ]);
+
+          updateEmpRole(updateEmpRoleAnswer);
           break;
 
         case "Exit":
@@ -173,10 +180,15 @@ function addDepartment(newDeptAnswer) {
 // Add an Employee function
 
 // Update a Role function
-function updateRole() {
+function updateEmpRole(updateEmpRoleAnswer) {
   connection.query(
-    "UPDATE role WHERE ?",
-    { role: updateRoleAnswer.name },
+    "UPDATE employee SET ? WHERE ?",
+    [
+      { role_id: updateEmpRoleAnswer.roleId },
+      {
+        id: updateEmpRoleAnswer.empId,
+      },
+    ],
     function (err, res) {
       if (err) throw err;
       console.table(res);
