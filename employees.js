@@ -1,10 +1,10 @@
-var mysql = require("mysql");
-var inquirer = require("inquirer");
+// requiring dependencies
+const mysql = require("mysql");
+const inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
   host: "localhost",
 
-  // Your port; if not 3306
   port: 3306,
 
   // Your username
@@ -19,7 +19,7 @@ connection.connect(function (err) {
   if (err) throw err;
   modifyEmployee();
 });
-
+// function to offer the user options for the database
 async function modifyEmployee() {
   inquirer
     .prompt({
@@ -37,7 +37,7 @@ async function modifyEmployee() {
         "Exit",
       ],
     })
-
+    // apply the switch case to that each question above can have a uique fucntion called
     .then(async function (answer) {
       switch (answer.action) {
         case "View All Roles":
@@ -82,6 +82,7 @@ async function modifyEmployee() {
               message: "What is the new Dept Name?",
             },
           ]);
+
           addDepartment(newDeptAnswer);
           break;
 
@@ -108,6 +109,7 @@ async function modifyEmployee() {
               message: "What is the new employee's manager's id?",
             },
           ]);
+
           addEmployee(newEmpAnswer);
           break;
 
@@ -220,9 +222,7 @@ function updateEmpRole(updateEmpRoleAnswer) {
     "UPDATE employee SET ? WHERE ?",
     [
       { role_id: updateEmpRoleAnswer.roleId },
-      {
-        id: updateEmpRoleAnswer.empId,
-      },
+      { id: updateEmpRoleAnswer.empId },
     ],
     function (err, res) {
       if (err) throw err;
