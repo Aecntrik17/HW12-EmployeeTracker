@@ -20,7 +20,7 @@ connection.connect(function (err) {
   modifyEmployee();
 });
 
-function modifyEmployee() {
+async function modifyEmployee() {
   inquirer
     .prompt({
       name: "action",
@@ -34,10 +34,11 @@ function modifyEmployee() {
         "Add a Department",
         "Add an Employee",
         "Update a Role",
+        "Exit",
       ],
     })
 
-    .then(function (answer) {
+    .then(async function (answer) {
       switch (answer.action) {
         case "View All Roles":
           viewAllRoles();
@@ -49,6 +50,50 @@ function modifyEmployee() {
 
         case "View Departments":
           viewDepartments();
+          break;
+
+        case "Add a Role":
+          const newRoleAnswer = await inquirer.prompt([
+            {
+              name: "addRole",
+              type: "input",
+              message: "What is the new Role title?",
+            },
+            {
+              name: "addSalary",
+              type: "input",
+              message: "What is the new Role salary?",
+            },
+            {
+              name: "addRoleDptId",
+              type: "number",
+              message: "What is the new Role department id?",
+            },
+          ]);
+
+          addRole(newRoleAnswer);
+          break;
+
+        case "Add a Department":
+          addDepartment();
+          break;
+
+        case "Add an Employee":
+          addEmployee();
+          break;
+
+        case "Update a Role":
+          const updateRoleAnswer = inquirer.prompt({
+            name: "updateRole",
+            type: "input",
+            message: "What is the new Role title?",
+          });
+          const role = new Role(newRoleAnswer.name);
+          updateRole();
+          break;
+
+        case "Exit":
+          connection.end();
           break;
       }
     });
@@ -66,7 +111,7 @@ function viewAllRoles() {
   );
 }
 
-// view all employees function
+// view all Employees function
 function viewAllEmployees() {
   connection.query(
     "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id",
@@ -78,7 +123,7 @@ function viewAllEmployees() {
   );
 }
 
-// view departments function
+// view Departments function
 function viewDepartments() {
   connection.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
@@ -88,9 +133,35 @@ function viewDepartments() {
 }
 
 // Add a Role function
+function addRole(newRoleAnswer) {
+  connection.query(
+    "INSERT INTO role SET ? ",
+    {
+      title: newRoleAnswer.addRole,
+      salary: newRoleAnswer.addSalary,
+      department_id: newRoleAnswer.addRoleDptId,
+    },
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      modifyEmployee();
+    }
+  );
+}
 
 // Add a Department function
 
 // Add an Employee function
 
-// update an Employee function
+// Update a Role function
+function updateRole() {
+  connection.query(
+    "UPDATE role WHERE ?",
+    { role: updateRoleAnswer.name },
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      modifyEmployee();
+    }
+  );
+}
