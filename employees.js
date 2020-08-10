@@ -75,7 +75,19 @@ async function modifyEmployee() {
           break;
 
         case "Add a Department":
-          addDepartment();
+          const newDeptAnswer = await inquirer.prompt([
+            {
+              name: "addDeptId",
+              type: "input",
+              message: "What is the new Dept Id?",
+            },
+            {
+              name: "addDeptName",
+              type: "input",
+              message: "What is the new Dept Name?",
+            },
+          ]);
+          addDepartment(newDeptAnswer);
           break;
 
         case "Add an Employee":
@@ -150,7 +162,20 @@ function addRole(newRoleAnswer) {
 }
 
 // Add a Department function
-
+function addDepartment(newDeptAnswer) {
+  connection.query(
+    "INSERT INTO department SET ? ",
+    {
+      id: newDeptAnswer.addDeptId,
+      name: newDeptAnswer.addDeptName,
+    },
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      modifyEmployee();
+    }
+  );
+}
 // Add an Employee function
 
 // Update a Role function
